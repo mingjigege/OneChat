@@ -1,14 +1,18 @@
 #include "Global.h"
 
-std::string formatMessage(std::string_view author, std::string_view message) {
-    std::string result = ConfigData::mLimit;
-    std::string forbiddenWords = ConfigData::mBan;
+ll::event::ListenerId mEventId;
 
-    // Replace forbidden words with asterisks
+bool mIsEnabled = false;
+
+std::string formatMessage(std::string_view author, std::string_view message) {
+    std::string        result         = message;
+    const std::string& forbiddenWords = ConfigData::mBan;
+
     for (const auto& word : forbiddenWords) {
-        if (message.find(word) != std::string::npos) {
+        std::size_t found = result.find(word);
+        if (found != std::string::npos) {
             std::string replacement(word.length(), '*');
-            ll::utils::string_utils::replaceAll(result, word, replacement);
+            result.replace(found, word.length(), replacement);
         }
     }
 
@@ -16,20 +20,12 @@ std::string formatMessage(std::string_view author, std::string_view message) {
 }
 
 void listenEvent() {
-    auto& eventBus = ll::event::EventBus::getInstance();
-    eventBus.emplaceListener<GMLIB::Event::PacketEvent::TextPacketWriteBeforeEvent>(
-        [](GMLIB::Event::PacketEvent::TextPacketWriteBeforeEvent& ev) {
-            auto& pkt = ev.getPacket();
-            if (pkt.mType == TextPacketType::Chat) {
-                auto pl = ll::service::getLevel()->getPlayer(pkt.mAuthor);
-                pkt.mMessage = formatMessage(pkt.mAuthor, pkt.mMessage);
-                pkt.mAuthor.clear();
-            }
-        }
+    auto listener = ll::event::EventBus::getInstance().emplaceListener<ll::event::player::PlayerChatEvent>(
+        [](ll::event::player::PlayerChatEvent& ev) {
+            ev.setMessage(formatMessage(ev.getAuthor(), ev.getMessage())); // 过滤违禁词
+        },
+        ll::event::EventPriority::High
     );
-}
-
-void removeListener() {
-    auto& eventBus = ll::event::EventBus::getInstance();
-    eventBus.removePluginListeners("OneChat");
+    mEventId   = listener->getId();
+    mIsEnabled = true;
 }

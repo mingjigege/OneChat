@@ -23,10 +23,7 @@ bool MyPlugin::enable() {
     return true;
 }
 
-bool MyPlugin::disable() {
-   removeListener();
-    return true;
-}
+bool MyPlugin::disable() { return true; }
 
 } // namespace my_plugin
 

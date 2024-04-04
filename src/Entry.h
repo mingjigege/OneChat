@@ -1,6 +1,5 @@
 #pragma once
 #include <ll/api/plugin/NativePlugin.h>
-#include <ll/api/plugin/RegisterHelper.h>
 
 namespace my_plugin {
 

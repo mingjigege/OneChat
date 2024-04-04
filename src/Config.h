@@ -2,7 +2,7 @@
 #include "Global.h"
 
 std::string defaultConfig = R"({
-    "NumberLimit": "",
+    "NumberLimit": "15",
     "Ban":{
         "妈", 
         "操",  

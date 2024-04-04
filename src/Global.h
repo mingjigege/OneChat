@@ -11,5 +11,5 @@ extern std::unordered_map<std::string> mBan;
 } // namespace ConfigData
 
 extern void initPlugin();
+extern void enablePlugin();
 extern void listenEvent();
-extern void removeListener();
