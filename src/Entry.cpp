@@ -3,19 +3,19 @@
 
 ll::Logger logger(PLUGIN_NAME);
 
-namespace my_plugin {
+namespace OneChat {
 
-std::unique_ptr<MyPlugin>& MyPlugin::getInstance() {
-    static std::unique_ptr<MyPlugin> instance;
+std::unique_ptr<Entry>& Entry::getInstance() {
+    static std::unique_ptr<Entry> instance;
     return instance;
 }
 
-bool MyPlugin::load() {
+bool Entry::load() {
     initPlugin();
     return true;
 }
 
-bool MyPlugin::enable() {
+bool Entry::enable() {
     listenEvent();
     logger.info("OneChat Loaded!");
     logger.info("Author: 铭记mingji");
@@ -23,8 +23,13 @@ bool MyPlugin::enable() {
     return true;
 }
 
-bool MyPlugin::disable() { return true; }
+bool Entry::disable() {
+    ll::event::EventBus::getInstance().removePluginListeners("OneChat");
+    return true;
+}
 
-} // namespace my_plugin
+bool Entry::unload() { return true; }
 
-LL_REGISTER_PLUGIN(my_plugin::MyPlugin, my_plugin::MyPlugin::getInstance());
+} // namespace OneChat
+
+LL_REGISTER_PLUGIN(OneChat::Entry, OneChat::Entry::getInstance());

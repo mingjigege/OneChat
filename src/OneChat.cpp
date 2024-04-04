@@ -1,31 +1,37 @@
 #include "Global.h"
 
-ll::event::ListenerId mEventId;
+bool replaceIlligalWords(std::string& message, std::string word) {
+    if (message.find(word) != std::string::npos) {
+        ll::string_utils::replaceAll(message, word, ConfigData::mPlaceholder);
+        return true;
+    }
+    return false;
+}
 
-bool mIsEnabled = false;
-
-std::string formatMessage(std::string_view author, std::string_view message) {
-    std::string        result         = message;
-    const std::string& forbiddenWords = ConfigData::mBan;
-
-    for (const auto& word : forbiddenWords) {
-        std::size_t found = result.find(word);
-        if (found != std::string::npos) {
-            std::string replacement(word.length(), '*');
-            result.replace(found, word.length(), replacement);
+void checkMessage(std::string& message) {
+    for (auto& word : ConfigData::mBlackList) {
+        auto result = replaceIlligalWords(message, word);
+        if (result && ConfigData::mReplaceAll) {
+            message = ConfigData::mPlaceholder;
+            return;
         }
     }
-
-    return result;
 }
 
 void listenEvent() {
-    auto listener = ll::event::EventBus::getInstance().emplaceListener<ll::event::player::PlayerChatEvent>(
+    ll::event::EventBus::getInstance().emplaceListener<ll::event::player::PlayerChatEvent>(
         [](ll::event::player::PlayerChatEvent& ev) {
-            ev.setMessage(formatMessage(ev.getAuthor(), ev.getMessage())); // 过滤违禁词
+            if (Config->getValue<bool>({"SpamCheck", "Enabled"}, true)) {
+                if (ev.message().size() > ConfigData::mChatLimit) {
+                    ev.cancel();
+                    ev.message() = ConfigData::mPlaceholder;
+                    return ev.self().sendMessage(Config->getValue<std::string>({"SpamCheck", "Message"}, ""));
+                }
+            }
+            if (Config->getValue<bool>({"IlligalWordsCheck", "Enabled"}, true)) {
+                return checkMessage(ev.message());
+            }
         },
-        ll::event::EventPriority::High
+        ll::event::EventPriority::Highest
     );
-    mEventId   = listener->getId();
-    mIsEnabled = true;
 }

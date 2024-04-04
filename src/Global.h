@@ -3,13 +3,15 @@
 
 #define PLUGIN_NAME "OneChat"
 
-extern ll::Logger logger;
+extern ll::Logger                logger;
+extern GMLIB::Files::JsonConfig* Config;
 
 namespace ConfigData {
-extern std::string                     mLimit;
-extern std::unordered_map<std::string> mBan;
+extern int                      mChatLimit;
+extern std::string              mPlaceholder;
+extern bool                     mReplaceAll;
+extern std::vector<std::string> mBlackList;
 } // namespace ConfigData
 
 extern void initPlugin();
-extern void enablePlugin();
 extern void listenEvent();

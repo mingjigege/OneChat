@@ -2,24 +2,21 @@
 #include "Global.h"
 
 namespace ConfigData {
-extern std::string                                  mLimit;
-extern std::unordered_map<std::string, std::string> mBan;
+int                      mChatLimit   = 20;
+std::string              mPlaceholder = "*";
+bool                     mReplaceAll  = false;
+std::vector<std::string> mBlackList   = {};
 } // namespace ConfigData
 
-namespace {
 GMLIB::Files::JsonConfig* Config = nullptr;
-}
 
 void initConfig() {
     Config = new GMLIB::Files::JsonConfig("./plugins/OneChat/config/config.json", defaultConfig);
     Config->init();
-    ConfigData::mLimit = Config->getValue<std::string>({"NumberLimit"}, "15");
-    ConfigData::mBan   = Config->getValue<std::unordered_map<std::string, std::string>>(
-        {
-            "Ban"
-    },
-        {{"卡", "操"}}
-    );
+    ConfigData::mChatLimit   = Config->getValue<int>({"SpamCheck", "MaxChatLength"}, 60);
+    ConfigData::mPlaceholder = Config->getValue<std::string>({"IlligalWordsCheck", "Placeholder"}, "*");
+    ConfigData::mReplaceAll  = Config->getValue<bool>({"IlligalWordsCheck", "ReplaceAll"}, true);
+    ConfigData::mBlackList   = Config->getValue<std::vector<std::string>>({"IlligalWordsCheck", "Blacklist"}, {});
 }
 
 void initPlugin() { initConfig(); }

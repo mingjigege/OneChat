@@ -1,14 +1,14 @@
 #pragma once
 #include <ll/api/plugin/NativePlugin.h>
 
-namespace my_plugin {
+namespace OneChat {
 
-class MyPlugin {
+class Entry {
 
 public:
-    static std::unique_ptr<MyPlugin>& getInstance();
+    static std::unique_ptr<Entry>& getInstance();
 
-    MyPlugin(ll::plugin::NativePlugin& self) : mSelf(self) {}
+    Entry(ll::plugin::NativePlugin& self) : mSelf(self) {}
 
     [[nodiscard]] ll::plugin::NativePlugin& getSelf() const { return mSelf; }
 
@@ -21,12 +21,11 @@ public:
     /// @return True if the plugin is disabled successfully.
     bool disable();
 
-    // TODO: Implement this method if you need to unload the plugin.
     // /// @return True if the plugin is unloaded successfully.
-    // bool unload();
+    bool unload();
 
 private:
     ll::plugin::NativePlugin& mSelf;
 };
 
-} // namespace my_plugin
+} // namespace OneChat
