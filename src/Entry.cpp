@@ -23,10 +23,7 @@ bool Entry::enable() {
     return true;
 }
 
-bool Entry::disable() {
-    ll::event::EventBus::getInstance().removePluginListeners("OneChat");
-    return true;
-}
+bool Entry::disable() { return true; }
 
 bool Entry::unload() { return true; }
 
