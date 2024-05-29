@@ -1,20 +1,19 @@
 #pragma once
-#include "Global.h"
+#include <iostream>
+#include <vector>
 
-std::string defaultConfig = R"({
-    "SpamCheck": {
-        "Enabled": true,
-        "MaxChatLength": 60,
-        "Message": "发言内容过长，请重新输入！"
-    },
-    "IlligalWordsCheck": {
-        "Enabled": true,
-        "ReplaceAll": true,
-        "Placeholder": "***",
-        "Blacklist": [
-            "妈",
-            "操",  
-            "卡"
-        ]
-    }
-})";
+struct Config {
+    int version = 1;
+struct Spam_Check {
+        bool                     Enabled     = true;
+        int                      MaxChatLength = 60;
+        std::string              Message = "发言内容过长，请重新输入！";
+    } SpamCheck;
+
+    struct Words_Check {
+        bool                     Enabled     = true;
+        bool                     ReplaceAll  = true;
+        std::string              Placeholder = "***";
+        std::vector<std::string> Blacklist   = {"卡"};
+    } IlligalWordsCheck;
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include "Config.h"
 #include <ll/api/plugin/NativePlugin.h>
 
 namespace OneChat {
@@ -24,8 +25,11 @@ public:
     // /// @return True if the plugin is unloaded successfully.
     bool unload();
 
+    Config& getConfig();
+
 private:
     ll::plugin::NativePlugin& mSelf;
+    std::optional<Config> mConfig;
 };
 
 } // namespace OneChat

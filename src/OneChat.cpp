@@ -2,17 +2,17 @@
 
 bool replaceIlligalWords(std::string& message, std::string word) {
     if (message.find(word) != std::string::npos) {
-        ll::string_utils::replaceAll(message, word, ConfigData::mPlaceholder);
+        ll::string_utils::replaceAll(message, word, OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder);
         return true;
     }
     return false;
 }
-
+//OneChat::Entry::getInstance()->getConfig().ChatFormat
 void checkMessage(std::string& message) {
-    for (auto& word : ConfigData::mBlackList) {
+    for (auto& word : OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Blacklist) {
         auto result = replaceIlligalWords(message, word);
-        if (result && ConfigData::mReplaceAll) {
-            message = ConfigData::mPlaceholder;
+        if (result && OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.ReplaceAll) {
+            message = OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder;
             return;
         }
     }
@@ -21,14 +21,14 @@ void checkMessage(std::string& message) {
 void listenEvent() {
     ll::event::EventBus::getInstance().emplaceListener<ll::event::player::PlayerChatEvent>(
         [](ll::event::player::PlayerChatEvent& ev) {
-            if (Config->getValue<bool>({"SpamCheck", "Enabled"}, true)) {
-                if (ev.message().size() > ConfigData::mChatLimit) {
+            if (OneChat::Entry::getInstance()->getConfig().SpamCheck.MaxChatLength) {
+                if (ev.message().size() > OneChat::Entry::getInstance()->getConfig().SpamCheck.Enabled) {
                     ev.cancel();
-                    ev.message() = ConfigData::mPlaceholder;
-                    return ev.self().sendMessage(Config->getValue<std::string>({"SpamCheck", "Message"}, ""));
+                    ev.message() = OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder;
+                    return ev.self().sendMessage(OneChat::Entry::getInstance()->getConfig().SpamCheck.Message);
                 }
             }
-            if (Config->getValue<bool>({"IlligalWordsCheck", "Enabled"}, true)) {
+            if (OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Enabled == true) {
                 return checkMessage(ev.message());
             }
         },
