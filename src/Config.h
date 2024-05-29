@@ -4,10 +4,10 @@
 
 struct Config {
     int version = 1;
-struct Spam_Check {
-        bool                     Enabled     = true;
-        int                      MaxChatLength = 60;
-        std::string              Message = "发言内容过长，请重新输入！";
+    struct Spam_Check {
+        bool        Enabled       = true;
+        int         MaxChatLength = 60;
+        std::string Message       = "发言内容过长，请重新输入！";
     } SpamCheck;
 
     struct Words_Check {

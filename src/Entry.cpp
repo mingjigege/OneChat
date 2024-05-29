@@ -10,7 +10,7 @@ std::unique_ptr<Entry>& Entry::getInstance() {
     return instance;
 }
 
-bool Entry::load() {return true;}
+bool Entry::load() { return true; }
 
 bool Entry::enable() {
     mConfig.emplace();

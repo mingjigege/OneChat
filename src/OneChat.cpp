@@ -1,14 +1,19 @@
-#include "Global.h"
 #include "Entry.h"
+#include "Global.h"
+
 
 bool replaceIlligalWords(std::string& message, std::string word) {
     if (message.find(word) != std::string::npos) {
-        ll::string_utils::replaceAll(message, word, OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder);
+        ll::string_utils::replaceAll(
+            message,
+            word,
+            OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder
+        );
         return true;
     }
     return false;
 }
-//OneChat::Entry::getInstance()->getConfig().ChatFormat
+// OneChat::Entry::getInstance()->getConfig().ChatFormat
 void checkMessage(std::string& message) {
     for (auto& word : OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Blacklist) {
         auto result = replaceIlligalWords(message, word);
