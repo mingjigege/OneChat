@@ -16,4 +16,4 @@ struct Spam_Check {
         std::string              Placeholder = "***";
         std::vector<std::string> Blacklist   = {"卡"};
     } IlligalWordsCheck;
-}
+};

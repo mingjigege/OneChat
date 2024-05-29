@@ -1,4 +1,5 @@
 #include "Global.h"
+#include "Entry.h"
 
 bool replaceIlligalWords(std::string& message, std::string word) {
     if (message.find(word) != std::string::npos) {
