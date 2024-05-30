@@ -13,7 +13,7 @@ bool replaceIlligalWords(std::string& message, std::string word) {
     }
     return false;
 }
-// OneChat::Entry::getInstance()->getConfig().ChatFormat
+
 void checkMessage(std::string& message) {
     for (auto& word : OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Blacklist) {
         auto result = replaceIlligalWords(message, word);
@@ -27,8 +27,8 @@ void checkMessage(std::string& message) {
 void listenEvent() {
     ll::event::EventBus::getInstance().emplaceListener<ll::event::player::PlayerChatEvent>(
         [](ll::event::player::PlayerChatEvent& ev) {
-            if (OneChat::Entry::getInstance()->getConfig().SpamCheck.MaxChatLength) {
-                if (ev.message().size() > OneChat::Entry::getInstance()->getConfig().SpamCheck.Enabled) {
+            if (OneChat::Entry::getInstance()->getConfig().SpamCheck.Enabled == true) {
+                if (ev.message().size() > OneChat::Entry::getInstance()->getConfig().SpamCheck.MaxChatLength) {
                     ev.cancel();
                     ev.message() = OneChat::Entry::getInstance()->getConfig().IlligalWordsCheck.Placeholder;
                     return ev.self().sendMessage(OneChat::Entry::getInstance()->getConfig().SpamCheck.Message);
